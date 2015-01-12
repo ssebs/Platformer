@@ -39,11 +39,11 @@ import org.newdawn.slick.util.ResourceLoader;
 public class PlatformerMain implements Runnable
 {
 	public final int WIDTH = 1280, HEIGHT = 720, MENU = 0, PLAY = 1, END = 2, OPTIONS = 3;
-	private boolean stopper, fallBool = true, foodDraw = true;;
+	private boolean stopper, fallBool = true, foodDraw = true, once = false;
 	private int state, level, y = 0;;
 	private String stringToDraw;
 	private Player joff;
-	private Enemy penguin, penguin2;
+	private Enemy penguin, penguin2, penguin3, penguin4, penguin5, penguin6, penguin7, penguin8, penguin9;
 	private Door door1;
 	private Food food;
 	private Font font;
@@ -104,6 +104,7 @@ public class PlatformerMain implements Runnable
 		{
 			state = OPTIONS;
 		}
+
 	}
 
 	public void options()
@@ -418,6 +419,10 @@ public class PlatformerMain implements Runnable
 		{
 			joff.setHealth(0);
 		}
+		if (Keyboard.isKeyDown(Keyboard.KEY_3))
+		{
+			level = 3;
+		}
 	}
 
 	public void levelOne()
@@ -510,13 +515,22 @@ public class PlatformerMain implements Runnable
 
 	public void levelThree()
 	{
-		// TODO: make level 3
 		renderLevelThree();
 		// logic
-		penguin.move3();
-		penguin2.move2();
-		enemyCollision(penguin);
-		enemyCollision(penguin2);
+		penguin3.move(3, 5);
+		penguin4.move(5, 7);
+		penguin5.move(6, 8);
+		penguin6.move(3, 5);
+		penguin7.move(5, 7);
+		penguin8.move(6, 8);
+		penguin9.move(5, 7);
+		enemyCollision(penguin3);
+		enemyCollision(penguin4);
+		enemyCollision(penguin5);
+		enemyCollision(penguin6);
+		enemyCollision(penguin7);
+		enemyCollision(penguin8);
+		enemyCollision(penguin9);
 		doorCollision();
 		powerUp();
 		stringToDraw = "Health: " + joff.getHealth();
@@ -546,8 +560,14 @@ public class PlatformerMain implements Runnable
 			g.draw(3);
 		}
 
-		penguin.draw();
-		penguin2.draw();
+		penguin3.draw();
+		penguin4.draw();
+		penguin5.draw();
+		penguin6.draw();
+		penguin7.draw();
+		penguin8.draw();
+		penguin9.draw();
+
 		door1.draw();
 
 		if (foodDraw == true)
@@ -597,15 +617,36 @@ public class PlatformerMain implements Runnable
 	{
 		if ((joff.getX() >= 1216))
 		{
-			System.out.println("next level");
 			level++;
 			joff.setX(32);
 			joff.setY(200);
+		}
+		if (level > 3 && joff.getHealth() > 0)
+		{
+			win();
+			System.out.println("YOU WON");
 		}
 		if (level > 3)
 		{
 			joff.setHealth(0);
 		}
+		if (level == 3)
+		{
+			food.setX(64 * 7);
+			food.setY((720 - (64 * 5)));
+
+			if (once == false)
+			{
+				foodDraw = true;
+				once = true;
+			}
+		}
+
+	}
+
+	public void win()
+	{
+		// TODO redner win
 	}
 
 	@SuppressWarnings("unused")
@@ -827,10 +868,18 @@ public class PlatformerMain implements Runnable
 
 	public void initObjs()
 	{
+
 		// init objects
 		joff = new Player(200, 200, "Joffreey.png", 6, 100);
 		penguin = new Enemy((1280 - (64 * 4)), (720 - (64 * 3)), "tux1.png", 2);
 		penguin2 = new Enemy((1280 - (64 * 9)), (720 - (64 * 4)), "tux1.png", 2);
+		penguin3 = new Enemy((64 * 4), (720 - (64 * 4)), "tux1.png", 2);
+		penguin4 = new Enemy((64 * 6), (720 - (64 * 6)), "tux1.png", 3);
+		penguin5 = new Enemy((64 * 8), (720 - (64 * 6)), "tux1.png", 2);
+		penguin6 = new Enemy((64 * 10), (720 - (64 * 4)), "tux1.png", 4);
+		penguin7 = new Enemy((64 * 12), (720 - (64 * 7)), "tux1.png", 2);
+		penguin8 = new Enemy((64 * 16), (720 - (64 * 7)), "tux1.png", 7);
+		penguin9 = new Enemy((64 * 17), (720 - (64 * 5)), "tux1.png", 1);
 		door1 = new Door((1280 - 64), (720 - 128), "Door.png");
 		food = new Food(64 * 11, (720 - (64 * 5)), "Food.png");
 
@@ -853,7 +902,7 @@ public class PlatformerMain implements Runnable
 				x += 64;
 			}
 		}
-
+		// ///LEVEL TWO
 		{// makes grass for level 2
 			grass2.add(new Ground(64 * 0, (720 - (64 * 5))));
 			grass2.add(new Ground(64 * 1, (720 - (64 * 4))));
@@ -889,7 +938,7 @@ public class PlatformerMain implements Runnable
 			dirt2.add(new Ground(64 * 3, (720 - (64 * 1))));
 		}
 
-		{
+		{// makes water for level 2
 			water2.add(new Ground(64 * 7, (720 - (64 * 1))));
 			water2.add(new Ground(64 * 8, (720 - (64 * 1))));
 			water2.add(new Ground(64 * 9, (720 - (64 * 1))));
@@ -901,6 +950,29 @@ public class PlatformerMain implements Runnable
 			water2.add(new Ground(64 * 15, (720 - (64 * 1))));
 			water2.add(new Ground(64 * 16, (720 - (64 * 1))));
 		}
+		// ///LEVEL THREE
+
+		{// makes grass blocks for level 3
+			grass3.add(new Ground(64 * 0, (720 - (64 * 5))));
+			grass3.add(new Ground(64 * 1, (720 - (64 * 5))));
+			grass3.add(new Ground(64 * 3, (720 - (64 * 3))));
+			grass3.add(new Ground(64 * 5, (720 - (64 * 5))));
+			grass3.add(new Ground(64 * 7, (720 - (64 * 7))));
+			grass3.add(new Ground(64 * 9, (720 - (64 * 3))));
+			grass3.add(new Ground(64 * 11, (720 - (64 * 5))));
+			grass3.add(new Ground(64 * 13, (720 - (64 * 7))));
+			grass3.add(new Ground(64 * 15, (720 - (64 * 5))));
+			grass3.add(new Ground(64 * 19, (720 - (64 * 1))));
+
+		}
+
+		{// makes water blocks for level 3
+			for (int i = 0; i < 19; i++)
+			{
+				water3.add(new Ground(64 * i, (720 - (64 * 1))));
+			}
+		}
+
 		Display.setTitle("A Platformer Of Some Sort");
 
 	}

@@ -43,6 +43,24 @@ public class Enemy extends PlatformerMain
 			y++;
 	}
 	
+	public void move(int start, int end)
+	{
+
+		if (y == 720 - (64 * start))
+		{
+			up = true;
+		}
+		else if (y == 720 - (64 * end))
+		{
+			up = false;
+		}
+
+		if (up == true)
+			y--;
+		else if (up == false)
+			y++;
+	}
+	
 	public void move2()
 	{
 
